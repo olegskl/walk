@@ -1,3 +1,13 @@
 ~            # temporary files
-.DS_Store    # osx-specific files
 *.sublime-*  # sublime-text editor files
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
