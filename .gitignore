@@ -1,5 +1,7 @@
-~            # temporary files
-*.sublime-*  # sublime-text editor files
+# Editor generated files #
+##########################
+*~
+*.sublime-*
 
 # OS generated files #
 ######################
