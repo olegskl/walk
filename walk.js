@@ -2,7 +2,7 @@
  * @license The MIT License (MIT).
  *    Copyright (c) 2012 Oleg Sklyanchuk.
  *    http://opensource.org/licenses/mit-license.html
- * @fileOverview Asynchronous directory walker for Node.js
+ * @fileOverview Async directory walker for Node.js with recursion control.
  * @author Oleg Sklyanchuk
  * @version 0.1.0
  */

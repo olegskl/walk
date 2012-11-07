@@ -1,7 +1,7 @@
 walk.js
 =====
 
-Asynchronous directory walker for Node.js
+Asynchronous directory walker for Node.js with recursion control.
 
 Changelog
 -------
