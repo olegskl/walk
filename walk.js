@@ -4,7 +4,7 @@
  *    http://opensource.org/licenses/mit-license.html
  * @fileOverview Async directory walker for Node.js with recursion control.
  * @author Oleg Sklyanchuk
- * @version 0.1.0
+ * @version 0.2.0
  */
 
 // JSLint directives:
@@ -24,31 +24,21 @@ var fs = require('fs'), // filesystem
 function noop() {}
 
 /**
- * Walks a seed item with a given worker and a callback.
+ * Walks an item with a given worker and an optional callback.
  *
- * @example walk('path/to/dir', worker, callback);
+ * @private
  *
- * @param {String} item Seed path of a folder or file.
+ * @param {String} item Full path of a folder or file.
  * @param {Function} worker A worker function applied to every item the walker
  *    steps on. The worker should return a truthy value for sub-directories that
- *    are to be walked (and eventually links that are to be followed?).
- * @param [Function] callback A callback function.
+ *    are to be walked.
+ * @param {Function} callback A callback function.
+ * @param [Boolean] callback A callback function.
  *
  * @returns {Undefined}
  */
 
-var walk = module.exports = function (item, worker, callback) {
-
-    // Do not initiate walking without a valid worker:
-    if (typeof worker !== 'function') {
-        callback('worker not defined');
-        return;
-    }
-
-    // If callback is not defined, assign a noop to it:
-    if (typeof callback !== 'function') {
-        callback = noop;
-    }
+function walk(item, worker, callback, ignoreWorker) {
 
     // Obtain the stats of the seed item to determine a way to handle it:
     fs.stat(item, function (err, stats) {
@@ -61,7 +51,7 @@ var walk = module.exports = function (item, worker, callback) {
 
         // Do not proceed if the item doesn't match the criteria:
         // (any falsy value is acceptable)
-        if (!worker(item, stats)) {
+        if (!ignoreWorker && !worker(item, stats)) {
             callback();
             return;
         }
@@ -102,7 +92,7 @@ var walk = module.exports = function (item, worker, callback) {
                 }
 
                 // Iterating through the items in the folder:
-                for (i; i < itemCount; i += 1) {
+                for (i = 0; i < itemCount; i += 1) {
                     itemPath = pathJoin(item, itemNames[i]);
                     walk(itemPath, worker, itemWalkCallback);
                 }
@@ -112,4 +102,36 @@ var walk = module.exports = function (item, worker, callback) {
         }
 
     });
+}
+
+/**
+ * Initiates walking a seed item with a given worker and an optional callback.
+ *
+ * @example walk('path/to/dir', worker, callback);
+ *
+ * @param {String} item Seed path of a folder or file.
+ * @param {Function} worker A worker function applied to every item the walker
+ *    steps on. The worker should return a truthy value for sub-directories that
+ *    are to be walked.
+ * @param [Function] callback A callback function.
+ *
+ * @returns {Undefined}
+ */
+
+module.exports = function (item, worker, callback) {
+
+    // Do not initiate walking without a valid worker:
+    if (typeof worker !== 'function') {
+        callback('worker not defined');
+        return;
+    }
+
+    // If callback is not defined, assign a noop to it:
+    if (typeof callback !== 'function') {
+        callback = noop;
+    }
+
+    // Start walking, but force the worker to ignore the seed item:
+    walk(item, worker, callback, true);
+
 };

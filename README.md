@@ -35,12 +35,6 @@ Usage
     console.time('Walk finished; time spent');
     walk('path/to/dir', worker, callback);
 
-Changelog
--------
-
-###0.1.0
-Initial commit.
-
 License
 -------
 
