@@ -4,7 +4,7 @@
  *    http://opensource.org/licenses/mit-license.html
  * @fileOverview Async directory walker for Node.js with recursion control.
  * @author Oleg Sklyanchuk
- * @version 0.2.0
+ * @version 0.1.1
  */
 
 // JSLint directives:
@@ -18,7 +18,6 @@ var fs = require('fs'), // filesystem
 
 /**
  * Noop function.
- * @private
  */
 
 function noop() {}
@@ -26,14 +25,12 @@ function noop() {}
 /**
  * Walks an item with a given worker and an optional callback.
  *
- * @private
- *
  * @param {String} item Full path of a folder or file.
  * @param {Function} worker A worker function applied to every item the walker
  *    steps on. The worker should return a truthy value for sub-directories that
  *    are to be walked.
  * @param {Function} callback A callback function.
- * @param [Boolean] callback A callback function.
+ * @param [Boolean] ignoreWorker When truthy, ignores the worker function.
  *
  * @returns {Undefined}
  */
