@@ -4,7 +4,7 @@
  *    http://opensource.org/licenses/mit-license.html
  * @fileOverview Async directory walker for Node.js with recursion control.
  * @author Oleg Sklyanchuk
- * @version 0.1.1
+ * @version 0.1.2
  */
 
 // JSLint directives:
@@ -64,9 +64,9 @@ function walk(item, worker, callback, ignoreWorker) {
 
                 // Cache variables for faster retreival:
                 var i = 0, // item iteration identifier
-                    itemCount = itemNames.length, // count of items in directory
-                    pending = itemCount, // keeps track of items in async mode
-                    itemPath; // placeholder for full item path
+                    itemCount = 0, // directory items counter
+                    pending = 0, // keeps track of items
+                    itemPath; // full item path
 
                 // If failed to retrieve the list of directory items,
                 // do not walk the directory and escalate the error object:
@@ -74,6 +74,9 @@ function walk(item, worker, callback, ignoreWorker) {
                     callback(err);
                     return;
                 }
+
+                // It's now safe to refer to itemNames:
+                pending = itemCount = itemNames.length;
 
                 // If the directory is empty, do not walk it:
                 if (itemCount === 0) {
