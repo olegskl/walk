@@ -18,6 +18,8 @@ var fs = require('fs'), // filesystem
 
 /**
  * Noop function.
+ *
+ * @returns {Undefined}
  */
 
 function noop() {}
