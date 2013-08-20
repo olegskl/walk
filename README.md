@@ -1,14 +1,15 @@
 walk.js
-=====
+=======
 
 Asynchronous directory walker for Node.js with recursion control.
 
 Usage
--------
+-----
 
     var walk = require('./walk');
     
-    // The worker receives two arguments:
+    // The worker is a function applied to every item the walker steps on;
+    // it receives two arguments:
     // 1. path - a full path of an item the walker steps on
     // 2. stats - an fs.Stats object of the item,
     //    see http://nodejs.org/api/fs.html#fs_class_fs_stats
