@@ -1,0 +1,21 @@
+{
+    "name": "walk",
+    "version": "0.1.0",
+    "main": "walk.js",
+    "description": "Asynchronous directory walker with recursion control.",
+    "keywords": ["walk", "async", "fs"],
+    "author": {
+        "name": "Oleg Sklyanchuk",
+        "email": "sklyanchuk@gmail.com",
+        "url": "oregu.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/olegskl/walk.git"
+    },
+    "bugs": "http://github.com/olegskl/walk/issues",
+    "engines": {
+        "node": "*"
+    },
+    "license": "MIT"
+}
