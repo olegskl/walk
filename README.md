@@ -1,12 +1,10 @@
-walk.js
-=======
+# walk #
 
 Asynchronous directory walker for Node.js with recursion control.
 
-Usage
------
+## Usage ##
 
-    var walk = require('./walk');
+    var walk = require('walk');
     
     // The worker is a function applied to every item the walker steps on;
     // it receives two arguments:
@@ -36,7 +34,6 @@ Usage
     console.time('Walk finished; time spent');
     walk('path/to/dir', worker, callback);
 
-License
--------
+## License ##
 
 http://opensource.org/licenses/mit-license.html
