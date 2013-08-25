@@ -1,16 +1,13 @@
 /**
- * @license The MIT License (MIT).
- *    Copyright (c) 2012 Oleg Sklyanchuk.
- *    http://opensource.org/licenses/mit-license.html
  * @fileOverview Async directory walker for Node.js with recursion control.
+ * @license The MIT License (MIT).
+ *    Copyright (c) 2012-2013 Oleg Sklyanchuk.
+ *    http://opensource.org/licenses/mit-license.html
  * @author Oleg Sklyanchuk
- * @version 0.1.2
  */
 
-// JSLint directives:
 /*jslint node: true */
 
-// ECMAScript 5 strict mode:
 'use strict';
 
 var fs = require('fs'), // filesystem
@@ -18,33 +15,31 @@ var fs = require('fs'), // filesystem
 
 /**
  * Noop function.
- *
- * @returns {Undefined}
+ * @return {Undefined}
  */
-
 function noop() {}
 
 /**
  * Walks an item with a given worker and an optional callback.
  *
- * @param {String} item Full path of a folder or file.
- * @param {Function} worker A worker function applied to every item the walker
- *    steps on. The worker should return a truthy value for sub-directories that
- *    are to be walked.
- * @param {Function} callback A callback function.
- * @param [Boolean] ignoreWorker When truthy, ignores the worker function.
+ * @param {String}   item         Full path of a folder or file.
+ * @param {Function} worker       A worker function applied to every item the
+ *                                walker steps on. The worker should return a
+ *                                truthy value for sub-directories that are
+ *                                to be walked.
+ * @param {Function} callback     A callback function.
+ * @param [Boolean]  ignoreWorker When truthy, ignores the worker function.
  *
- * @returns {Undefined}
+ * @return {Undefined}
  */
-
 function walk(item, worker, callback, ignoreWorker) {
 
     // Obtain the stats of the seed item to determine a way to handle it:
-    fs.stat(item, function (err, stats) {
+    fs.stat(item, function (error, stats) {
 
         // Interrupt on error:
-        if (err) {
-            callback(err);
+        if (error) {
+            callback(error);
             return;
         }
 
@@ -55,53 +50,49 @@ function walk(item, worker, callback, ignoreWorker) {
             return;
         }
 
-        // When the walker steps on directories:
-        // 1. Read the directory contents into memory;
-        // 2. Walk across the directory contents;
-        if (stats.isDirectory()) {
-
-            // Asynchronously read directory contents into memory, keeping in
-            // mind that readdir provides a list of item names, not full paths:
-            fs.readdir(item, function (err, itemNames) {
-
-                // Cache variables for faster retreival:
-                var i = 0, // item iteration identifier
-                    itemCount = 0, // directory items counter
-                    pending = 0, // keeps track of items
-                    itemPath; // full item path
-
-                // If failed to retrieve the list of directory items,
-                // do not walk the directory and escalate the error object:
-                if (err) {
-                    callback(err);
-                    return;
-                }
-
-                // It's now safe to refer to itemNames:
-                pending = itemCount = itemNames.length;
-
-                // If the directory is empty, do not walk it:
-                if (itemCount === 0) {
-                    callback();
-                    return;
-                }
-
-                // A callback to be called for every item that has been walked:
-                function itemWalkCallback(err) {
-                    if ((pending -= 1) === 0) {
-                        callback(err);
-                    }
-                }
-
-                // Iterating through the items in the folder:
-                for (i = 0; i < itemCount; i += 1) {
-                    itemPath = pathJoin(item, itemNames[i]);
-                    walk(itemPath, worker, itemWalkCallback);
-                }
-
-            });
-
+        // There's nothing to do anymore if stepped on a non-directory item:
+        if (!stats.isDirectory()) {
+            return;
         }
+
+        // Asynchronously read directory contents into memory, keeping in mind
+        // that readdir provides a list of item names, not full paths:
+        fs.readdir(item, function (error, itemNames) {
+
+            // Cache variables for faster retreival:
+            var i = 0, // item iteration identifier
+                itemCount = 0, // directory items counter
+                pending = 0; // keeps track of items
+
+            // If failed to retrieve the list of directory items,
+            // do not walk the directory and escalate the error object:
+            if (error) {
+                callback(error);
+                return;
+            }
+
+            // It's now safe to refer to itemNames:
+            pending = itemCount = itemNames.length;
+
+            // If the directory is empty, do not walk it:
+            if (itemCount === 0) {
+                callback();
+                return;
+            }
+
+            // A callback to be called for every item that has been walked:
+            function itemWalkCallback(error) {
+                if ((pending -= 1) === 0) {
+                    callback(error);
+                }
+            }
+
+            // Iterating through the items in the folder:
+            for (i = 0; i < itemCount; i += 1) {
+                walk(pathJoin(item, itemNames[i]), worker, itemWalkCallback);
+            }
+
+        });
 
     });
 }
@@ -111,15 +102,14 @@ function walk(item, worker, callback, ignoreWorker) {
  *
  * @example walk('path/to/dir', worker, callback);
  *
- * @param {String} item Seed path of a folder or file.
- * @param {Function} worker A worker function applied to every item the walker
- *    steps on. The worker should return a truthy value for sub-directories that
- *    are to be walked.
+ * @param {String}   item     Seed path of a folder or file.
+ * @param {Function} worker   A worker function applied to every item the walker
+ *                            steps on. The worker should return a truthy value
+ *                            for sub-directories that are to be walked.
  * @param [Function] callback A callback function.
  *
- * @returns {Undefined}
+ * @return {Undefined}
  */
-
 module.exports = function (item, worker, callback) {
 
     // Do not initiate walking without a valid worker:
