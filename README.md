@@ -1,8 +1,18 @@
 # walk #
 
-Asynchronous directory walker for Node.js with recursion control.
+Asynchronous directory walker with recursion control.
 
-## Usage ##
+## Installation ##
+
+    npm install git://github.com/olegskl/walk.git
+
+or in package.json as a dependency:
+
+    "dependencies": {
+        "walk": "git://github.com/olegskl/walk.git"
+    }
+
+## Usage example ##
 
     var walk = require('walk');
     
@@ -33,6 +43,20 @@ Asynchronous directory walker for Node.js with recursion control.
     
     console.time('Walk finished; time spent');
     walk('path/to/dir', worker, callback);
+
+## Tests ##
+
+If [Mocha](https://github.com/visionmedia/mocha) is not installed:
+
+    npm install
+
+Use any of the following to run the test suite:
+
+    mocha
+<!-- -->
+    npm test
+<!-- -->
+    make test
 
 ## License ##
 
