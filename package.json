@@ -15,13 +15,14 @@
     },
     "bugs": "http://github.com/olegskl/walk/issues",
     "devDependencies": {
+        "jslint": "*",
         "mocha": "*"
     },
     "engines": {
         "node": "*"
     },
     "scripts": {
-        "test": "mocha -R spec"
+        "test": "jslint walk.js && mocha -R spec"
     },
     "license": "MIT"
 }
