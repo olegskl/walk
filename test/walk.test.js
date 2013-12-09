@@ -45,7 +45,8 @@
 var assert = require('assert'),
     fs = require('fs'),
     path = require('path'),
-    walk = require('../walk.js');
+    walk = require('../walk.js'),
+    validPath = path.resolve(__dirname, 'foo');
 
 /**
  * A function that always returns true.
@@ -56,22 +57,28 @@ function truthy() {
 }
 
 describe('walk', function () {
-    
+
     it('should be a function', function () {
         assert.strictEqual('function', typeof walk);
     });
 
 
-    it('should not throw when called with no arguments', function () {
-        assert.doesNotThrow(walk);
+    it('should throw when called with no arguments', function () {
+        assert.throws(walk);
     });
 
-    it('should not throw when called with invalid arguments', function () {
-        assert.doesNotThrow(function () {
+    it('should throw when called with invalid arguments', function () {
+        assert.throws(function () {
             walk(undefined, 'not-a-function', 'not-a-function');
         });
     });
 
+    it('should not throw when called with valid path and worker but invalid ' +
+        'callback', function () {
+            assert.doesNotThrow(function () {
+                walk(validPath, truthy, 'not-a-function');
+            });
+        });
 
     it('should callback with TypeError if path is not a String', function () {
         function callback(error) {
@@ -95,14 +102,14 @@ describe('walk', function () {
             done();
         }
 
-        walk("skjhfalsd", worker, callback);
+        walk('skjhfalsd', worker, callback);
     });
 
     it('should walk all except seed if worker returns true', function (done) {
         var visited = [],
             valid = 'abcdefghijklmnopqrstuvwxyz';
 
-        function worker(item, stats) {
+        function worker(item) {
             visited.push(path.basename(item));
             return true;
         }
@@ -112,17 +119,17 @@ describe('walk', function () {
             done();
         }
 
-        walk(path.resolve(__dirname, 'foo'), worker, callback);
+        walk(validPath, worker, callback);
     });
 
     it('should pass valid and existing path to worker', function (done) {
-        function worker(item, stats) {
+        function worker(item) {
             assert.strictEqual('string', typeof item);
             assert(fs.existsSync(item));
             return true;
         }
 
-        walk(path.resolve(__dirname, 'foo'), worker, done);
+        walk(validPath, worker, done);
     });
 
     it('should pass valid stats to worker', function (done) {
@@ -131,14 +138,14 @@ describe('walk', function () {
             return true;
         }
 
-        walk(path.resolve(__dirname, 'foo'), worker, done);
+        walk(validPath, worker, done);
     });
 
     it('should walk one dir level if worker returns false', function (done) {
         var visited = [],
             valid = 'abcdef';
 
-        function worker(item, stats) {
+        function worker(item) {
             visited.push(path.basename(item));
             return false;
         }
@@ -149,7 +156,7 @@ describe('walk', function () {
             done();
         }
 
-        walk(path.resolve(__dirname, 'foo'), worker, callback);
+        walk(validPath, worker, callback);
     });
 
     it('should not read folders where worker returns false', function (done) {
@@ -171,7 +178,7 @@ describe('walk', function () {
             done();
         }
 
-        walk(path.resolve(__dirname, 'foo'), worker, callback);
+        walk(validPath, worker, callback);
     });
 
 });

@@ -14,10 +14,12 @@ var fs = require('fs'), // filesystem
     pathJoin = require('path').join; // filepath helper
 
 /**
- * Noop function.
+ * Default callback function.
  * @return {Undefined}
  */
-function noop() {}
+function defaultCallback(error) {
+    if (error) { throw error; }
+}
 
 /**
  * Walks a path with a given worker and a callback.
@@ -85,7 +87,8 @@ function walk(path, worker, callback, ignoreWorker) {
 
             // A callback to be called for every path that has been walked:
             function pathWalkCallback(error) {
-                if ((pending -= 1) === 0) {
+                pending -= 1;
+                if (!pending) {
                     callback(error);
                 }
             }
@@ -115,9 +118,9 @@ function walk(path, worker, callback, ignoreWorker) {
  */
 module.exports = function (path, worker, callback) {
 
-    // If callback is not defined, assign a noop to it:
+    // If callback is not defined, assign a defaultCallback to it:
     if (typeof callback !== 'function') {
-        callback = noop;
+        callback = defaultCallback;
     }
 
     // Validate path before passing it to fs.stat:
