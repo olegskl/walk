@@ -7,6 +7,7 @@
  */
 
 /*jslint node: true */
+/*global describe, it */
 
 // Test directory structure:
 // -------------------------
