@@ -1,11 +1,11 @@
-# walk #
+# walk
 
 [![Build Status](https://travis-ci.org/olegskl/walk.png)](https://travis-ci.org/olegskl/walk)
 [![Code Climate](https://codeclimate.com/github/olegskl/walk.png)](https://codeclimate.com/github/olegskl/walk)
 
 Asynchronous directory walker with recursion control.
 
-## Installation ##
+## Installation
 
     npm install git://github.com/olegskl/walk.git
 
@@ -15,7 +15,7 @@ or in package.json as a dependency:
         "walk": "git://github.com/olegskl/walk.git"
     }
 
-## Usage example ##
+## Usage example
 
     var walk = require('walk');
     
@@ -47,7 +47,7 @@ or in package.json as a dependency:
     console.time('Walk finished; time spent');
     walk('path/to/dir', worker, callback);
 
-## Tests ##
+## Tests
 
 If [Mocha](https://github.com/visionmedia/mocha) is not installed:
 
@@ -61,6 +61,6 @@ Use any of the following to run the test suite:
 <!-- -->
     make test
 
-## License ##
+## License
 
 http://opensource.org/licenses/mit-license.html
