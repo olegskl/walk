@@ -1,5 +1,8 @@
 # walk #
 
+[![Build Status](https://travis-ci.org/olegskl/walk.png)](https://travis-ci.org/olegskl/walk)
+[![Code Climate](https://codeclimate.com/github/olegskl/walk.png)](https://codeclimate.com/github/olegskl/walk)
+
 Asynchronous directory walker with recursion control.
 
 ## Installation ##
